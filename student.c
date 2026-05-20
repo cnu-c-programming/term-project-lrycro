@@ -3,7 +3,7 @@
 #include <string.h>
 #include "student.h"
 
-// 1. 학생 추가
+// 1. add student
 Student* add_student(Student* head, int id, const char* name, int score) {
 	Student* new_student = (Student*)malloc(sizeof(Student));
 	if (new_student == NULL) {
@@ -31,7 +31,7 @@ Student* add_student(Student* head, int id, const char* name, int score) {
 	return head;
 }
 
-// 2. 학생 삭제
+// 2. delete student
 Student* delete_student(Student* head, int id) {
 	if (head == NULL) {
 		return NULL;
@@ -58,6 +58,7 @@ Student* delete_student(Student* head, int id) {
 	return head;
 }
 
+// 3. find student
 Student* find_student(Student* head, int id) {
 	Student* curr = head;
 
@@ -70,7 +71,17 @@ Student* find_student(Student* head, int id) {
 	return NULL;
 }
 
-void list_studnets(Student* head) {
+// 4. update student's score
+Student* update_student(Student* head, int id, int new_score) {
+	Student* target = find_student(head, id);
+	if (target != NULL) {
+		target ->score = new_score;
+	}
+	return head;
+}
+
+// 5. print list of students
+void list_students(Student* head) {
 	if (head == NULL) {
 		// TC07
 		printf("No students found.\n");
@@ -87,13 +98,14 @@ void list_studnets(Student* head) {
 	}
 }
 
+// 6. memory free
 void free_students(Student* head) {
 	Student* curr = head;
-	Student* next2;
+	Student* next_node;
 
 	while (curr != NULL) {
-		next2 = curr->next;
+		next_node = curr->next;
 		free(curr);
-		curr = next2;
+		curr = next_node;
 	}
 }
