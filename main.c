@@ -34,34 +34,35 @@ void run_shell(const char *csv_path) {
     /* TODO */
     (void)csv_path;
     /* temporary test log */
-    printf("Linked List test\n\n");
+//    printf("Linked List test\n\n");
+//
+//    Student* head = NULL;
+//
+//    printf("1. Add 3 Students\n");
+//    head = add_student(head, 1, "Alice", 90);
+//    head = add_student(head, 2, "Bob", 85);
+//    head = add_student(head, 3, "Charlie", 95);
+//
+//    printf("\n2. Print list of students\n");
+//    list_students(head);
+//
+//    printf("\n3. Update Student's Score\n");
+//    head = update_student(head, 2, 100);
+//    list_students(head);
+//
+//    printf("\n4. Delete Student Data\n");
+//    head = delete_student(head, 1);
+//    list_students(head);
+//
+//    printf("\n5. TC07 No students found. Test\n");
+//    head = delete_student(head, 2);
+//    head = delete_student(head, 3);
+//    list_students(head);
+//
+//    printf("\n6. free students Test\n");
+//    free_students(head);
+//    printf("\n7. test ends\n");
 
-    Student* head = NULL;
-
-    printf("1. Add 3 Students\n");
-    head = add_student(head, 1, "Alice", 90);
-    head = add_student(head, 2, "Bob", 85);
-    head = add_student(head, 3, "Charlie", 95);
-
-    printf("\n2. Print list of students\n");
-    list_students(head);
-
-    printf("\n3. Update Student's Score\n");
-    head = update_student(head, 2, 100);
-    list_students(head);
-
-    printf("\n4. Delete Student Data\n");
-    head = delete_student(head, 1);
-    list_students(head);
-
-    printf("\n5. TC07 No students found. Test\n");
-    head = delete_student(head, 2);
-    head = delete_student(head, 3);
-    list_students(head);
-
-    printf("\n6. free students Test\n");
-    free_students(head);
-    printf("\n7. test ends\n");
 
 }
 

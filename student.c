@@ -3,12 +3,16 @@
 #include <string.h>
 #include "student.h"
 
-// 1. add student
-Student* add_student(Student* head, int id, const char* name, int score) {
+// 1. add student: 성공(0), 중복(-1), 메모리 부족(-2)
+int add_student(Student** head, int id, const char* name, int score) {
+	if (find_student(*head, id) != NULL) {
+		return -1;
+	}
+
 	Student* new_student = (Student*)malloc(sizeof(Student));
+	
 	if (new_student == NULL) {
-		fprintf(stderr, "Error: Memory Allocation Failed.\n");
-		return head;
+		return -2;
 	}
 	
 	new_student->id = id;
@@ -17,45 +21,44 @@ Student* add_student(Student* head, int id, const char* name, int score) {
 	new_student->score = score;
 	new_student->next = NULL;
 
-	if (head == NULL) {
-		return new_student;
+	if (*head == NULL) {
+		*head = new_student;
+	} else {
+		Student* curr = *head;
+		while (curr->next != NULL) {
+			curr = curr->next;
+		}
+		curr->next = new_student;
 	}
-
-	Student* curr = head;
 	
-	while (curr->next != NULL) {
-		curr = curr->next;
-	}
-	curr->next = new_student;
-
-	return head;
+	return 0;
 }
 
-// 2. delete student
-Student* delete_student(Student* head, int id) {
-	if (head == NULL) {
-		return NULL;
+// 2. delete student: 성공(0), 데이터 없음(-1) 
+int delete_student(Student** head, int id) {
+	if (*head == NULL) {
+		return -1;
 	}
 
-	if (head->id == id) {
-		Student* tmp = head;
-		head = head->next;
+	if ((*head)->id == id) {
+		Student* tmp = *head;
+		*head = (*head)->next;
 		free(tmp);
-		return head;
+		return 0;
 	}
 
-	Student* curr = head;
+	Student* curr = *head;
 	
 	while (curr->next != NULL) {
 		if (curr->next->id == id) {
 			Student* tmp = curr->next;
 			curr->next = tmp->next;
 			free(tmp);
-			return head;
+			return 0;
 		}
 		curr = curr->next;
 	}
-	return head;
+	return -1;
 }
 
 // 3. find student
@@ -71,13 +74,14 @@ Student* find_student(Student* head, int id) {
 	return NULL;
 }
 
-// 4. update student's score
-Student* update_student(Student* head, int id, int new_score) {
+// 4. update student's score: 성공(0), 실패(-1)
+int update_student(Student* head, int id, int new_score) {
 	Student* target = find_student(head, id);
-	if (target != NULL) {
-		target ->score = new_score;
+	if (target == NULL) {
+		return -1;
 	}
-	return head;
+	target->score = new_score;
+	return 0;
 }
 
 // 5. print list of students
@@ -93,7 +97,7 @@ void list_students(Student* head) {
 	Student* curr = head;
 	
 	while (curr != NULL) {
-		printf("%d\t%s\t\t%d\n", curr->id, curr->name, curr->score);
+		printf("%d\t%s\t%d\n", curr->id, curr->name, curr->score);
 		curr = curr->next;
 	}
 }
