@@ -92,12 +92,12 @@ void list_students(Student* head) {
 		return;
 	}
 
-	printf("ID\tname\t\tScore\n");
+	printf("ID\tName\t\tScore\n");
 
 	Student* curr = head;
 	
 	while (curr != NULL) {
-		printf("%d\t%s\t%d\n", curr->id, curr->name, curr->score);
+		printf("%d\t%-15s\t%d\n", curr->id, curr->name, curr->score);
 		curr = curr->next;
 	}
 }
