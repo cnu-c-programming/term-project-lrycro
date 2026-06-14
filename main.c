@@ -32,7 +32,7 @@
  * --------------------------------------------------------------- */
 void run_shell(const char *csv_path) {
     /* TODO */
-    (void)csv_path;
+//    (void)csv_path;
     /* temporary test log */
 //    printf("Linked List test\n\n");
 //
@@ -62,8 +62,28 @@ void run_shell(const char *csv_path) {
 //    printf("\n6. free students Test\n");
 //    free_students(head);
 //    printf("\n7. test ends\n");
+	Student* head = NULL;
 
+	if (csv_path != NULL) {
+		int loaded_count = load_csv(&head, csv_path);
 
+		if (loaded_count == -1) {
+			// if there's no file -> start with empty list
+		} else if (loaded_count == -2) {
+			// wrong csv header (TC05)
+			fprintf(stderr, "Error: invalid header in CSV file.\n");
+			return;
+		} else {
+			// success
+			printf("Loaded %d students from %s. \n", loaded_count, csv_path);
+		}
+	}
+
+	list_students(head);
+
+	/* TODO: 명령어 처리? 뭔가 추가로 구현 */
+
+	free_students(head);
 }
 
 /* ---------------------------------------------------------------
