@@ -95,10 +95,36 @@ ShellResult handle_delete(char* args, Student** head) {
 }
 
 ShellResult handle_update(char* args, Student** head) {
-        (void)args;
-        (void)head;
-        printf("Update function 구현 예정\n");
-        return SHELL_OK;
+	if (args == NULL) {
+		printf("Error: missing arguments\n");
+		return SHELL_ERR_MISSING_ARGUMENT;
+	}
+
+	int id, new_score;
+
+	if (sscanf(args, "%d %d", &id, &new_score) != 2) {
+		printf("Error: invalid arguments\n");
+		return SHELL_ERR_INVALID_ARGUMENT;
+	}
+
+	if (new_score < 0 || new_score > 100) {
+		printf("Error: invalid score\n");
+		return SHELL_ERR_INVALID_SCORE;
+	}
+
+	// 성공 0, 실패 -1
+	int result = update_student(*head, id, new_score);
+
+	if (result == -1) {
+		// TC24
+		printf("Error: student not found\n");
+		return SHELL_ERR_STUDENT_NOT_FOUND;
+	}
+
+	// TC23
+	printf("Student updated\n");
+
+	return SHELL_OK;
 }
 
 ShellResult handle_find(char* args, Student** head) {
@@ -146,10 +172,13 @@ ShellResult handle_stats(char* args, Student** head) {
 ShellResult handle_help(char* args, Student** head);
 
 ShellResult handle_clear(char* args, Student** head) {
-        (void)args;
-        (void)head;
-        printf("Clear function 구현 예정\n");
-        return SHELL_OK;
+	(void) args;
+	(void) head;
+
+	// ANSI escape sequence
+	printf("\033[2J\033[H");
+
+	return SHELL_OK;
 }
 
 ShellResult handle_exit(char* args, Student** head) {
