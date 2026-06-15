@@ -66,10 +66,32 @@ ShellResult handle_add(char* args, Student** head) {
 }
 
 ShellResult handle_delete(char* args, Student** head) {
-        (void)args;
-        (void)head;
-        printf("Delete function 구현 예정\n");
-        return SHELL_OK;
+	if (args == NULL) {
+		printf("Error: missing arguments\n");
+		return SHELL_ERR_MISSING_ARGUMENT;
+	}
+
+	int id;
+
+	// id 추출
+	if (sscanf(args, "%d", &id) != 1) {
+		printf("Error: invalid arguments\n");
+		return SHELL_ERR_INVALID_ARGUMENT;
+	}
+
+	// 성공 0, 실패 -1
+	int result = delete_student(head, id);
+
+	// TC21 (소문자)
+	if (result == -1) {
+        	printf("Error: student not found\n");
+		return SHELL_ERR_STUDENT_NOT_FOUND;
+	}
+
+	// TC20
+	printf("Student deleted\n");
+
+	return SHELL_OK;
 }
 
 ShellResult handle_update(char* args, Student** head) {
@@ -80,10 +102,32 @@ ShellResult handle_update(char* args, Student** head) {
 }
 
 ShellResult handle_find(char* args, Student** head) {
-        (void)args;
-        (void)head;
-        printf("Find function 구현 예정\n");
-        return SHELL_OK;
+        if (args == NULL) {
+                printf("Error: missing arguments\n");
+                return SHELL_ERR_MISSING_ARGUMENT;
+        }
+
+        int id;
+
+        // id 추출
+        if (sscanf(args, "%d", &id) != 1) {
+                printf("Error: invalid arguments\n");
+                return SHELL_ERR_INVALID_ARGUMENT;
+        }
+
+        Student* target = find_student(*head, id);
+
+        // TC29 (소문자)
+        if (target == NULL) {
+                printf("Error: student not found\n");
+                return SHELL_ERR_STUDENT_NOT_FOUND;
+        }
+
+        printf("ID: %d\n", target->id);
+        printf("Name: %s\n", target->name);
+        printf("Score: %d\n", target->score);
+
+	return SHELL_OK;
 }
 
 ShellResult handle_list(char* args, Student** head) {
