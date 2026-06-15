@@ -143,13 +143,12 @@ void run_command_file(const char *cmd_file, const char *csv_path) {
     int line_num = 1;
 
     while (fgets(line, sizeof(line), fp) != NULL) {
-	    // ignore comments(#)
+	    // TC60 TC61 ignore comments(#)
 	    if (line[0] == '#') {
-		    line_num++;
 		    continue;
 	    }
 
-	    // ignore empty lines
+	    // TC62 ignore empty lines
 	    int is_empty = 1;
 	    for (int i = 0; line[i] != '\0'; i++) {
 		    if (line[i] != ' ' && line[i] != '\n') {
@@ -157,6 +156,8 @@ void run_command_file(const char *cmd_file, const char *csv_path) {
 			    break;
 		    }
 	    }
+
+	    if (is_empty) continue;
 
 	    if (!is_empty) {
 		printf("[command file:%d] %s", line_num, line);
