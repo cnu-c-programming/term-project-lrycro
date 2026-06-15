@@ -191,8 +191,39 @@ ShellResult handle_list(char* args, Student** head) {
 
 ShellResult handle_stats(char* args, Student** head) {
         (void)args;
-        (void)head;
-        printf("Stats function 구현 예정\n");
+
+	// TC37
+	if (*head == NULL) {
+		printf("No student data available\n");
+		return SHELL_OK;
+	}
+
+	int cnt = 0;
+	int sum = 0;
+	int max = -1;
+	int min = 101;
+
+	Student* curr = * head;
+	while (curr != NULL) {
+		cnt++;
+		sum += curr->score;
+		if (curr->score > max) {
+			max = curr->score;
+		}
+		if (curr->score < min) {
+			min = curr->score;
+		}
+		curr = curr->next;
+	}
+
+	// TC36, TC38
+	double avg = (double)sum / cnt;
+
+	printf("Count: %d\n", cnt);
+	printf("Average: %.1f\n", avg);
+	printf("Max: %d\n", max);
+	printf("Min: %d\n", min);
+
         return SHELL_OK;
 }
 

@@ -115,7 +115,61 @@ void run_shell(const char *csv_path) {
 void run_command_file(const char *cmd_file, const char *csv_path) {
     /* TODO */
     /* temporary log */
-    printf("Command File Mode: cmd: %s, csv: %s\n", cmd_file, csv_path);
+//    printf("Command File Mode: cmd: %s, csv: %s\n", cmd_file, csv_path);
+    Student* head = NULL;
+
+    // load csv file
+    if (csv_path != NULL) {
+	    int load_flag = load_csv(&head, csv_path);
+	    if (load_flag == -1) {
+		    // if there's no file, start with empty list (do nothing)
+	    } else if (load_flag == -2) {
+		    fprintf(stderr, "Error: invalid header in CSV file.\n");
+		    return;
+	    } else {
+		    printf("Loaded %d students from %s.\n", load_flag, csv_path);
+	    }
+    }
+
+    // open file
+    FILE* fp = fopen(cmd_file, "r");
+    if (fp == NULL) {
+	    fprintf(stderr, "Error: cannot open command file.\n");
+	    free_students(head);
+	    return;
+    }
+
+    char line[256];
+    int line_num = 1;
+
+    while (fgets(line, sizeof(line), fp) != NULL) {
+	    // ignore comments(#)
+	    if (line[0] == '#') {
+		    line_num++;
+		    continue;
+	    }
+
+	    // ignore empty lines
+	    int is_empty = 1;
+	    for (int i = 0; line[i] != '\0'; i++) {
+		    if (line[i] != ' ' && line[i] != '\n') {
+			    is_empty = 0;
+			    break;
+		    }
+	    }
+
+	    if (!is_empty) {
+		printf("[command file:%d] %s", line_num, line);
+
+		if (proc_cmd(&head, line) == 0) {
+			break;
+		}
+	    }
+	    line_num++;
+    }
+
+    fclose(fp);
+    free_students(head);
 }
 
 int main(int argc, char *argv[]) {
