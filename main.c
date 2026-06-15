@@ -84,7 +84,13 @@ void run_shell(const char *csv_path) {
 	char line[256];
 
 	while (1) {
-		printf("Shell> ");
+#ifdef ADMIN_MODE
+		printf("admin> ");
+
+#elif defined(CLIENT_MODE)
+		printf("client> ");
+
+#endif
 
 		if (fgets(line, sizeof(line), stdin) == NULL) {
 			break;  // EOF(ctrl+d) 입력 시 종료
