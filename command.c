@@ -20,10 +20,49 @@ ShellResult handle_reload(char* args, Student** head) {
 }
 
 ShellResult handle_add(char* args, Student** head) {
-        (void)args;
-        (void)head;
-        printf("Add function 구현 예정\n");
-        return SHELL_OK;
+	// 잘못된 인자 (args가 NULL인 경우)
+	if (args == NULL) {
+		printf("Error: missing arguments\n");
+		return SHELL_ERR_MISSING_ARGUMENT;
+	}
+
+	int id, score;
+	char name[64];
+
+	// parse
+	int parsed = sscanf(args, "%d %31s %d", &id, name, &score);
+
+	// 잘못된 인자 (개수 차이, type error)
+	if (parsed != 3) {
+		printf("Error: invalid arguments\n");
+		return SHELL_ERR_INVALID_ARGUMENT;
+	}
+
+	// 점수 범위 (0 ~ 100)
+	if (score < 0 || score > 100) {
+		printf("Error: invalid score\n");
+		return SHELL_ERR_INVALID_SCORE;
+	}
+
+	// add_student 호출
+	int result = add_student(head, id, name, score);
+
+	// duplicate ID
+	if (result == -1) {
+		printf("Error: duplicate ID\n");
+		return SHELL_ERR_DUPLICATE_STUDENT;
+	}
+
+	// memory allocation error
+	else if (result == -2) {
+		printf("Error: memory allocation failed\n");
+		return SHELL_ERR_UNKNOWN_COMMAND;
+	}
+
+	// TC08, TC18+19 student added 반환
+	printf("Student added\n");
+
+	return SHELL_OK;
 }
 
 ShellResult handle_delete(char* args, Student** head) {
