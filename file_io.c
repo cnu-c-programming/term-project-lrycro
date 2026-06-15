@@ -80,7 +80,26 @@ int load_csv(Student **head, const char *filename) {
 
 }
 
+// success: cnt (students), fail: -1
 int save_csv(Student *head, const char *filename) {
+    FILE *fp = fopen(filename, "w");
     
-    return 0;
+    if (fp == NULL) {
+	    return -1;
+    }
+
+    fprintf(fp, "id,name,score\n");
+
+    int cnt = 0;
+    Student *curr = head;
+    
+    while (curr != NULL) {
+	    fprintf(fp, "%d,%s,%d\n", curr->id, curr->name, curr->score);
+	    curr = curr->next;
+	    cnt++;
+    }
+
+    fclose(fp);
+
+    return cnt;
 }

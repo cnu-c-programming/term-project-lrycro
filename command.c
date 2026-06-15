@@ -2,27 +2,54 @@
 #include <string.h>
 #include "command.h"
 #include "student.h"
+#include "file_io.h"
 
 // 1. handler functions
 
 ShellResult handle_save(char* args, Student** head) {
 	(void)args;
-	(void)head;
-	printf("Save function 구현 예정\n");
+
+	int cnt = save_csv(*head, g_csv_path);
+
+	if (cnt == -1) {
+		printf("Error: cannot save to file.\n");
+		return SHELL_ERR_FILE_WRITE;
+	}
+
+	// TC32
+	printf("Saved %d students to %s\n.", cnt, g_csv_path);
+
 	return SHELL_OK;
 }
 
 ShellResult handle_reload(char* args, Student** head) {
         (void)args;
-        (void)head;
-        printf("Reload function 구현 예정\n");
+
+	// to prevent memory leak
+	free_students(*head);
+	*head = NULL;
+
+	int cnt = load_csv(head, g_csv_path);
+
+	if (cnt == -1) {
+		printf("Error: cannot open file.\n");
+		return SHELL_ERR_FILE_OPEN;
+	} else if (cnt == -2) {
+		// TC05 CSV header error
+		printf("Error: invalid header in CSV file.\n");
+		return SHELL_EXIT;
+	}
+
+	// TC34
+	printf("Reloaded %d students from %s\n.", cnt, g_csv_path);
+
         return SHELL_OK;
 }
 
 ShellResult handle_add(char* args, Student** head) {
 	// 잘못된 인자 (args가 NULL인 경우)
 	if (args == NULL) {
-		printf("Error: missing arguments\n");
+		printf("Error: missing arguments.\n");
 		return SHELL_ERR_MISSING_ARGUMENT;
 	}
 
@@ -34,13 +61,13 @@ ShellResult handle_add(char* args, Student** head) {
 
 	// 잘못된 인자 (개수 차이, type error)
 	if (parsed != 3) {
-		printf("Error: invalid arguments\n");
+		printf("Error: invalid arguments.\n");
 		return SHELL_ERR_INVALID_ARGUMENT;
 	}
 
 	// 점수 범위 (0 ~ 100)
 	if (score < 0 || score > 100) {
-		printf("Error: invalid score\n");
+		printf("Error: invalid score\n.");
 		return SHELL_ERR_INVALID_SCORE;
 	}
 
@@ -49,25 +76,25 @@ ShellResult handle_add(char* args, Student** head) {
 
 	// duplicate ID
 	if (result == -1) {
-		printf("Error: duplicate ID\n");
+		printf("Error: duplicate ID.\n");
 		return SHELL_ERR_DUPLICATE_STUDENT;
 	}
 
 	// memory allocation error
 	else if (result == -2) {
-		printf("Error: memory allocation failed\n");
+		printf("Error: memory allocation failed.\n");
 		return SHELL_ERR_UNKNOWN_COMMAND;
 	}
 
 	// TC08, TC18+19 student added 반환
-	printf("Student added\n");
+	printf("Student added.\n");
 
 	return SHELL_OK;
 }
 
 ShellResult handle_delete(char* args, Student** head) {
 	if (args == NULL) {
-		printf("Error: missing arguments\n");
+		printf("Error: missing arguments.\n");
 		return SHELL_ERR_MISSING_ARGUMENT;
 	}
 
@@ -75,7 +102,7 @@ ShellResult handle_delete(char* args, Student** head) {
 
 	// id 추출
 	if (sscanf(args, "%d", &id) != 1) {
-		printf("Error: invalid arguments\n");
+		printf("Error: invalid arguments.\n");
 		return SHELL_ERR_INVALID_ARGUMENT;
 	}
 
@@ -84,31 +111,31 @@ ShellResult handle_delete(char* args, Student** head) {
 
 	// TC21 (소문자)
 	if (result == -1) {
-        	printf("Error: student not found\n");
+        	printf("Error: student not found.\n");
 		return SHELL_ERR_STUDENT_NOT_FOUND;
 	}
 
 	// TC20
-	printf("Student deleted\n");
+	printf("Student deleted.\n");
 
 	return SHELL_OK;
 }
 
 ShellResult handle_update(char* args, Student** head) {
 	if (args == NULL) {
-		printf("Error: missing arguments\n");
+		printf("Error: missing arguments.\n");
 		return SHELL_ERR_MISSING_ARGUMENT;
 	}
 
 	int id, new_score;
 
 	if (sscanf(args, "%d %d", &id, &new_score) != 2) {
-		printf("Error: invalid arguments\n");
+		printf("Error: invalid arguments.\n");
 		return SHELL_ERR_INVALID_ARGUMENT;
 	}
 
 	if (new_score < 0 || new_score > 100) {
-		printf("Error: invalid score\n");
+		printf("Error: invalid score.\n");
 		return SHELL_ERR_INVALID_SCORE;
 	}
 
@@ -117,19 +144,19 @@ ShellResult handle_update(char* args, Student** head) {
 
 	if (result == -1) {
 		// TC24
-		printf("Error: student not found\n");
+		printf("Error: student not found.\n");
 		return SHELL_ERR_STUDENT_NOT_FOUND;
 	}
 
 	// TC23
-	printf("Student updated\n");
+	printf("Student updated.\n");
 
 	return SHELL_OK;
 }
 
 ShellResult handle_find(char* args, Student** head) {
         if (args == NULL) {
-                printf("Error: missing arguments\n");
+                printf("Error: missing arguments.\n");
                 return SHELL_ERR_MISSING_ARGUMENT;
         }
 
@@ -137,7 +164,7 @@ ShellResult handle_find(char* args, Student** head) {
 
         // id 추출
         if (sscanf(args, "%d", &id) != 1) {
-                printf("Error: invalid arguments\n");
+                printf("Error: invalid arguments.\n");
                 return SHELL_ERR_INVALID_ARGUMENT;
         }
 
@@ -145,7 +172,7 @@ ShellResult handle_find(char* args, Student** head) {
 
         // TC29 (소문자)
         if (target == NULL) {
-                printf("Error: student not found\n");
+                printf("Error: student not found.\n");
                 return SHELL_ERR_STUDENT_NOT_FOUND;
         }
 
@@ -272,7 +299,7 @@ int proc_cmd(Student **head, const char *cmd_line) {
 		}
 	}
 
-	printf("Error: unknown command\n");
+	printf("Error: unknown command.\n");
 
 	return 1; // shell 계속 실행
 }

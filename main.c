@@ -23,6 +23,8 @@
 #include "file_io.h"
 #include "command.h"
 
+const char* g_csv_path = NULL;
+
 /* ---------------------------------------------------------------
  * TODO: Implement the interactive shell loop.
  *   - Print a prompt and read a line from stdin.
@@ -147,6 +149,8 @@ int main(int argc, char *argv[]) {
     	    csv_path = argv[i];
 	}
     }
+
+    g_csv_path = csv_path;
 
     if (csv_path == NULL) {
 	#ifdef ADMIN_MODE

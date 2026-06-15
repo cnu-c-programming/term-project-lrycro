@@ -3,6 +3,8 @@
 
 #include "student.h"
 
+extern const char* g_csv_path;
+
 typedef enum {
     SHELL_OK = 0,
     SHELL_EXIT,
