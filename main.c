@@ -161,9 +161,12 @@ void run_command_file(const char *cmd_file, const char *csv_path) {
 
 	    if (!is_empty) {
 		printf("[command file:%d] %s", line_num, line);
-
-		if (proc_cmd(&head, line) == 0) {
+		
+		int res = proc_cmd(&head, line);
+		if (res == 0) {
 			break;
+		} else if (res == -1) {
+			printf("Skipped line %d.\n", line_num);
 		}
 	    }
 	    line_num++;
