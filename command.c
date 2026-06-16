@@ -446,11 +446,14 @@ int proc_cmd(Student **head, const char *cmd_line) {
 			if (result == SHELL_EXIT) {
 				return 0;
 			}
+			if (result != SHELL_OK) {
+				return -1; // error 발생 시 -1 return
+			}
 			return 1;
 		}
 	}
 
-	printf("Error: unknown command.\n");
+	printf("Error: unknown command or permission denied.\n");
 
 	return 1; // shell 계속 실행
 }
