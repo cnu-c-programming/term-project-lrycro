@@ -170,6 +170,8 @@ void run_command_file(const char *cmd_file, const char *csv_path) {
 		}
 	    }
 	    line_num++;
+
+	    printf("\n");
     }
 
     fclose(fp);
