@@ -4,6 +4,9 @@
 #include "student.h"
 #include "file_io.h"
 
+int g_unsaved_changes = 0;	// 변경 X: 0, 변경 O: 1
+static int g_exit = 0;		// exit 경고 구분 flag
+
 // 1. handler functions
 
 ShellResult handle_save(char* args, Student** head) {
@@ -18,6 +21,9 @@ ShellResult handle_save(char* args, Student** head) {
 
 	// TC32
 	printf("Saved %d students to %s\n.", cnt, g_csv_path);
+
+	g_unsaved_changes = 0;
+	g_exit = 0;
 
 	return SHELL_OK;
 }
@@ -42,6 +48,9 @@ ShellResult handle_reload(char* args, Student** head) {
 
 	// TC34
 	printf("Reloaded %d students from %s\n.", cnt, g_csv_path);
+
+	g_unsaved_changes = 0;
+        g_exit = 0;
 
         return SHELL_OK;
 }
@@ -89,6 +98,9 @@ ShellResult handle_add(char* args, Student** head) {
 	// TC08, TC18+19 student added 반환
 	printf("Student added.\n");
 
+	g_unsaved_changes = 1;
+        g_exit = 0;
+
 	return SHELL_OK;
 }
 
@@ -117,6 +129,9 @@ ShellResult handle_delete(char* args, Student** head) {
 
 	// TC20
 	printf("Student deleted.\n");
+
+	g_unsaved_changes = 1;
+        g_exit = 0;
 
 	return SHELL_OK;
 }
@@ -150,6 +165,9 @@ ShellResult handle_update(char* args, Student** head) {
 
 	// TC23
 	printf("Student updated.\n");
+
+	g_unsaved_changes = 1;
+        g_exit = 0;
 
 	return SHELL_OK;
 }
@@ -242,7 +260,16 @@ ShellResult handle_clear(char* args, Student** head) {
 ShellResult handle_exit(char* args, Student** head) {
         (void)args;
         (void)head;
-        return SHELL_EXIT;
+
+	if (g_unsaved_changes == 1 && g_exit == 0) {
+		printf("Warning: You have unsaved changes. Type 'exit' again to quit without saving.\n");
+		g_exit = 1; // warning O
+		return SHELL_OK;
+	}
+
+	printf("Goodbye.\n");
+
+	return SHELL_EXIT;
 }
 
 ShellResult handle_sort(char* args, Student** head) {
@@ -323,6 +350,9 @@ ShellResult handle_sort(char* args, Student** head) {
 	} else {
 		printf("sorted by score.\n");
 	}
+
+	g_unsaved_changes = 1;
+        g_exit = 0;
 
 	return SHELL_OK;
 }
