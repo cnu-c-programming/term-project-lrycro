@@ -74,6 +74,12 @@ ShellResult handle_add(char* args, Student** head) {
 		return SHELL_ERR_INVALID_ARGUMENT;
 	}
 
+	// TC11 TC12
+	if (id <= 0) {
+		printf("Error: invalid ID.\n");
+		return SHELL_ERR_INVALID_ARGUMENT;
+	}
+
 	// 점수 범위 (0 ~ 100)
 	if (score < 0 || score > 100) {
 		printf("Error: invalid score\n.");
