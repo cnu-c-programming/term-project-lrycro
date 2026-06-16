@@ -20,7 +20,7 @@ ShellResult handle_save(char* args, Student** head) {
 	}
 
 	// TC32
-	printf("Saved %d students to %s\n.", cnt, g_csv_path);
+	printf("Saved %d students to %s.\n", cnt, g_csv_path);
 
 	g_unsaved_changes = 0;
 	g_exit = 0;
@@ -47,7 +47,7 @@ ShellResult handle_reload(char* args, Student** head) {
 	}
 
 	// TC34
-	printf("Reloaded %d students from %s\n.", cnt, g_csv_path);
+	printf("Reloaded %d students from %s.\n", cnt, g_csv_path);
 
 	g_unsaved_changes = 0;
         g_exit = 0;
@@ -82,7 +82,7 @@ ShellResult handle_add(char* args, Student** head) {
 
 	// 점수 범위 (0 ~ 100)
 	if (score < 0 || score > 100) {
-		printf("Error: invalid score\n.");
+		printf("Error: invalid score.\n");
 		return SHELL_ERR_INVALID_SCORE;
 	}
 
@@ -303,52 +303,34 @@ ShellResult handle_sort(char* args, Student** head) {
 		return SHELL_OK;
 	}
 
-	int is_swapped;
-	Student *student_ptr;
-	Student *last_ptr = NULL;
+	int cnt = 0;
+	Student* tmp = *head;
+	while (tmp != NULL) {
+	    cnt++;
+    	    tmp = tmp->next;
+	}
 
-	// TODO: bubble sort?
-	do {
-	    is_swapped = 0;
-	    student_ptr = *head;
+	for (int i = 0; i < cnt - 1; i++) {
+	    Student** curr = head;
+    	    for (int j = 0; j < cnt - i - 1; j++) {
+	        Student* p1 = *curr;
+		Student* p2 = p1->next;
+		int needs_swap = 0;
 
-	    while (student_ptr->next != last_ptr) {
-		    int needs_swap = 0;
+		if (strcmp(key, "name") == 0) {
+		    if (strcmp(p1->name, p2->name) > 0) needs_swap = 1;
+		} else if (strcmp(key, "score") == 0) {
+		    if (p1->score > p2->score) needs_swap = 1;
+		}
 
-		    if (strcmp(key, "name") == 0) {
-			    // alphabet a to z ascending
-			    if (strcmp(student_ptr->name, student_ptr->next->name) > 0) {
-				    needs_swap = 1;
-			    }
-		    } else if (strcmp(key, "score") == 0) {
-			    // number 1 to 100 ascending
-			    if (student_ptr->score > student_ptr->next->score) {
-				    needs_swap = 1;
-			    }
-		    }
-
-		    // swap
-		    if (needs_swap) {
-			    int tmp_id = student_ptr->id;
-			    char tmp_name[64];
-			    strcpy(tmp_name, student_ptr->name);
-			    int tmp_score = student_ptr->score;
-
-			    student_ptr->id = student_ptr->next->id;
-			    strcpy(student_ptr->name, student_ptr->next->name);
-			    student_ptr->score = student_ptr->next->score;
-
-			    student_ptr->next->id = tmp_id;
-			    strcpy(student_ptr->next->name, tmp_name);
-			    student_ptr->next->score = tmp_score;
-
-			    is_swapped = 1;
-		    }
-		    student_ptr = student_ptr->next;
+		if (needs_swap) {
+		    p1->next = p2->next;
+		    p2->next = p1;
+		    *curr = p2;
+		}
+		curr = &((*curr)->next);
 	    }
-	    last_ptr = student_ptr;
-	} while (is_swapped);
-
+	}
 
 	// TC40
 	if (strcmp(key, "name") == 0) {
