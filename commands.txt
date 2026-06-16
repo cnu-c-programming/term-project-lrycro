@@ -1,0 +1,44 @@
+# ==========================================
+# Mini Student Shell - Batch Command Test
+# ==========================================
+
+# 1. 초기 상태 확인
+list
+stats
+
+# 2. 새로운 학생 데이터 추가
+add 201 Alpha 95
+add 202 Bravo 82
+add 203 Charlie 100
+add 204 Delta 50
+
+
+# (위 빈 줄 2개는 줄 번호 카운트에서 제외되어야 함)
+list
+
+# 3. 예외 처리 테스트 (오류 발생 시 Skipped line 처리되는지 확인)
+add -1 Negative 50
+add 201 Duplicate 70
+update 999 50
+sort badkey
+unknown_cmd test
+
+# 4. 데이터 수정 및 삭제 테스트
+update 204 60
+delete 201
+find 204
+find 201
+
+# 5. 정렬(Sort) 테스트
+sort score
+list
+sort name
+list
+
+# 6. 저장 및 리로드(Persistence) 테스트
+save
+reload
+stats
+
+# 7. 안전하게 종료 (저장했으므로 경고 없이 꺼져야 함)
+exit
