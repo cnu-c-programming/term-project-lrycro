@@ -245,6 +245,88 @@ ShellResult handle_exit(char* args, Student** head) {
         return SHELL_EXIT;
 }
 
+ShellResult handle_sort(char* args, Student** head) {
+	if (args == NULL) {
+		printf("Error: missing arguments.\n");
+		return SHELL_ERR_MISSING_ARGUMENT;
+	}
+
+	char key[32];
+	if (sscanf(args, "%s", key) != 1) {
+		printf("Error: invalid arguments.\n");
+		return SHELL_ERR_INVALID_ARGUMENT;
+	}
+
+	// TC43
+	if (strcmp(key, "name") != 0 && strcmp(key, "score") != 0) {
+		printf("Error: invalid sort key.\n");
+		return SHELL_ERR_INVALID_ARGUMENT;
+	}
+
+	if (*head == NULL || (*head)->next == NULL) {
+		// TC40 sort name messages
+		if (strcmp(key, "name") == 0) printf("sorted by name.\n");
+		if (strcmp(key, "score") == 0) printf("sorted by score.\n");
+		return SHELL_OK;
+	}
+
+	int is_swapped;
+	Student *student_ptr;
+	Student *last_ptr = NULL;
+
+	// TODO: bubble sort?
+	do {
+	    is_swapped = 0;
+	    student_ptr = *head;
+
+	    while (student_ptr->next != last_ptr) {
+		    int needs_swap = 0;
+
+		    if (strcmp(key, "name") == 0) {
+			    // alphabet a to z ascending
+			    if (strcmp(student_ptr->name, student_ptr->next->name) > 0) {
+				    needs_swap = 1;
+			    }
+		    } else if (strcmp(key, "score") == 0) {
+			    // number 1 to 100 ascending
+			    if (student_ptr->score > student_ptr->next->score) {
+				    needs_swap = 1;
+			    }
+		    }
+
+		    // swap
+		    if (needs_swap) {
+			    int tmp_id = student_ptr->id;
+			    char tmp_name[64];
+			    strcpy(tmp_name, student_ptr->name);
+			    int tmp_score = student_ptr->score;
+
+			    student_ptr->id = student_ptr->next->id;
+			    strcpy(student_ptr->name, student_ptr->next->name);
+			    student_ptr->score = student_ptr->next->score;
+
+			    student_ptr->next->id = tmp_id;
+			    strcpy(student_ptr->next->name, tmp_name);
+			    student_ptr->next->score = tmp_score;
+
+			    is_swapped = 1;
+		    }
+		    student_ptr = student_ptr->next;
+	    }
+	    last_ptr = student_ptr;
+	} while (is_swapped);
+
+
+	// TC40
+	if (strcmp(key, "name") == 0) {
+		printf("sorted by name.\n");
+	} else {
+		printf("sorted by score.\n");
+	}
+
+	return SHELL_OK;
+}
+
 // 2. command table
 
 #ifdef ADMIN_MODE
@@ -259,19 +341,21 @@ Command commands[] = {
     {"stats",  handle_stats,  "stats",                      "Show statistics"},
     {"help",   handle_help,   "help",                       "Show help"},
     {"clear",  handle_clear,  "clear",                      "Clear screen"},
-    {"exit",   handle_exit,   "exit",                       "Exit shell"}
+    {"exit",   handle_exit,   "exit",                       "Exit shell"},
+    {"sort",   handle_sort,   "sort <name|score>",	    "Sort students"}
 };
 #endif
 
 #ifdef CLIENT_MODE
 Command commands[] = {
-    {"reload", handle_reload, "reload",      "Reload students from CSV"},
-    {"find",   handle_find,   "find <id>",    "Find student"},
-    {"list",   handle_list,   "list",         "List students"},
-    {"stats",  handle_stats,  "stats",        "Show statistics"},
-    {"help",   handle_help,   "help",         "Show help"},
-    {"clear",  handle_clear,  "clear",        "Clear screen"},
-    {"exit",   handle_exit,   "exit",         "Exit shell"}
+    {"reload", handle_reload, "reload",      	    "Reload students from CSV"},
+    {"find",   handle_find,   "find <id>",    	    "Find student"},
+    {"list",   handle_list,   "list",         	    "List students"},
+    {"stats",  handle_stats,  "stats",         	    "Show statistics"},
+    {"help",   handle_help,   "help",         	    "Show help"},
+    {"clear",  handle_clear,  "clear",        	    "Clear screen"},
+    {"exit",   handle_exit,   "exit",         	    "Exit shell"},
+    {"sort",   handle_sort,   "sort <name|score>",  "Sort students"}
 };
 #endif
 
