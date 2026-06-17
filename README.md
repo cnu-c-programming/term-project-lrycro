@@ -78,7 +78,7 @@ exit
 ## 파일 구조
 
 ```
-student/
+term-project-lrycro/
 ├── main.c       - 프로그램 진입점, 인자 파싱 및 배치/인터랙티브 루프 제어
 ├── Makefile     - 빌드 자동화
 ├── command.h    - Command Table 구조체 및 상태 코드(ShellResult) 정의
@@ -108,4 +108,3 @@ grader.bat admin_shell.exe client_shell.exe students.csv
 .\grader.ps1 admin_shell.exe client_shell.exe students.csv
 ```
 
-> 최종 채점에 사용하는 test case는 변경될 수 있습니다.
