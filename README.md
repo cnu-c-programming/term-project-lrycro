@@ -89,7 +89,6 @@ student/
 ├── file_io.c    - CSV 파일 입출력 구현
 ├── students.csv - 프로그램 실행 시 로드 및 저장되는 기본 학생 데이터 파일
 ├── commands.txt - 배치 모드 자동화 테스트를 위한 명령어 스크립트 파일
-├── report.pdf   - Term Project 결과 보고서
 ├── README.md    - 프로젝트 개요, 빌드/실행 방법 및 구조 설명서
 ├── grader.py    - 제출 전 기능 확인용 채점 스크립트
 ├── grader.md    - grader 사용법
