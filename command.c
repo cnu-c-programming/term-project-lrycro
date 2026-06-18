@@ -399,7 +399,7 @@ int proc_cmd(Student **head, const char *cmd_line) {
 	buf[sizeof(buf) - 1] = '\0';
 
 	int len = strlen(buf);
-	while (len > 0 && buf[len - 1] == '\n') {
+	while (len > 0 && (buf[len - 1] == '\n' || buf[len - 1] == '\r')) {
 		buf[len - 1] = '\0';
 		len--;
 	}
