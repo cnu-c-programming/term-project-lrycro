@@ -80,7 +80,7 @@ exit
 ```
 term-project-lrycro/
 ├── main.c       - 프로그램 진입점, 인자 파싱 및 배치/인터랙티브 루프 제어
-├── Makefile     - 빌드 자동화
+├── Makefile     - 빌드 자동화 및 메모리 누수 검사
 ├── command.h    - Command Table 구조체 및 상태 코드(ShellResult) 정의
 ├── command.c    - 명령어 세부 동작 구현
 ├── student.h    - Student 구조체 정의 및 연결 리스트 관리 함수 선언
