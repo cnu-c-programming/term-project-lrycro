@@ -15,7 +15,7 @@ int load_csv(Student **head, const char *filename) {
     
     if (fgets(line, sizeof(line), fp) != NULL) {
 	int len = strlen(line);
-	while (len > 0 && line[len - 1] == '\n') {
+	while (len > 0 && (line[len - 1] == '\n' || line[len - 1] == 'r')) {
 	    line[len - 1] = '\0';
 	    len--;
 	}
