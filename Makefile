@@ -1,5 +1,5 @@
 CC     = gcc
-CFLAGS = -Wall -Wextra -std=c11 -fsanitize=address
+CFLAGS = -Wall -Wextra -std=c11 -fsanitize=address
 SRCS   = main.c student.c file_io.c command.c
 
 .PHONY: all admin client clean
